@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/ng-new-control-flow-demo",
+            "outputPath": "dist",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -49,7 +49,9 @@
                 }
               ],
               "outputHashing": "all",
-              "baseHref": "https://railsstudent.github.io/ng-new-control-flow-demo/"
+              "optimization": true,
+              "sourceMap": false,
+              "baseHref": "http://localhost:4200/ng-new-control-flow-demo/"
             },
             "development": {
               "optimization": false,
@@ -98,5 +100,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "fcdb6655-ba00-4493-82db-a8a5050e0e30"
   }
 }

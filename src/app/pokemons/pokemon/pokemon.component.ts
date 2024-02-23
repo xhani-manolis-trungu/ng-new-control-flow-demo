@@ -16,14 +16,14 @@ import { PokemonDetailsService } from './services/pokemon-details.service';
   template: `
     <div class="content">
       @if (pokemonDetails$ | async; as pokemonDetails) {
-        @defer {
+        @defer (prefetch on immediate) {
           <app-pokemon-physical [pokemonDetails]="pokemonDetails" />
           <app-pokemon-statistics [statistics]="pokemonDetails.stats" />
           <app-pokemon-abilities [abilities]="pokemonDetails.abilities" />
         } @loading (minimum 200ms) {
           <p>Loading....</p>
         } @placeholder (minimum 500ms) {
-          <p>Placeholder of Pokemon</p>
+          <div style="height: 526.4px; background-color: gray;">Placeholder of Pokemon</div>
         } @error {
           <p>Failed to load dependencies</p>
         }
@@ -62,17 +62,20 @@ export class PokemonComponent implements OnInit {
   id = 1;
 
   pokemonDetailsService = inject(PokemonDetailsService);
-  pokemonListService = inject(PokemonListService);
   router = inject(Router);
   pokemonDetails$!: Observable<PokemonDetails | undefined>;
+  page = 0;
+
+  constructor(pokemonListService: PokemonListService) {
+    this.page = pokemonListService.getPage(this.id);
+    pokemonListService.currentPage.set(this.page - 1);
+  }
 
   ngOnInit(): void {
     this.pokemonDetails$ = this.pokemonDetailsService.getPokemonDetails(this.id, history.state?.pokemon);
   }
 
   backToPage() {
-    const page = this.pokemonListService.getPage(this.id);
-    this.pokemonListService.currentPage.set(page - 1);
-    this.router.navigate(['/list'], { queryParams: { page }});
+    this.router.navigate(['/list'], { queryParams: { page: this.page }});
   }
 }

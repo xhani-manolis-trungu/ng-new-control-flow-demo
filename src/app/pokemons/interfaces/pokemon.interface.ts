@@ -11,7 +11,7 @@ export interface RawStats {
   effort: number;
   stat: Resource;
 }
- 
+
 export interface RawAbility {
   ability: Resource;
   slot: number;
@@ -26,11 +26,17 @@ export interface Pokemon {
     sprites: {
       back_shiny: string;
       front_shiny: string;
+      other: {
+        dream_world: {
+          front_default: string;
+        }
+      }
     },
     stats: RawStats [],
-    abilities: RawAbility[]
+    abilities: RawAbility[],
+    index: number;
 }
-  
+
 export type DisplayPokemon = Omit<Pokemon, 'sprites' | 'stats' | 'abilities'> & {
     frontShiny: string;
     abilities: Ability[];

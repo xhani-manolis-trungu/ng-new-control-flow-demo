@@ -6,7 +6,7 @@ import { Statistics } from '../interfaces/pokemon-statistics.interface';
 import { DisplayPokemon, Pokemon } from '../interfaces/pokemon.interface';
 import { transformSpecialPowers } from '../utilities/transform-special-powers.util';
 
-const PAGE_SIZE = 30;
+const PAGE_SIZE = 10;
 
 @Injectable({
   providedIn: 'root'
@@ -23,16 +23,19 @@ export class PokemonListService {
   getPokemons(): Observable<DisplayPokemon[]> {
     const pageSize = PAGE_SIZE;
     const pokemonIds = [...Array(pageSize).keys()]
-      .map((n) => pageSize * this.currentPage() + (n + 1));
+      .map((n) => {
+        return pageSize * this.currentPage() + (n + 1)
+      });
 
-    return forkJoin(pokemonIds.map((id) => this.get(id)));
+      console.log(pokemonIds)
+    return forkJoin(pokemonIds.map((id, index) => this.get(id, index)));
   }
 
-  private pokemonTransformer(pokemon: Pokemon): DisplayPokemon {
+  private pokemonTransformer(pokemon: Pokemon, index: number): DisplayPokemon {
     const { id, name, height, weight, sprites, abilities: a, stats: statistics } = pokemon;
 
     const { abilities, stats }: { abilities: Ability[]; stats: Statistics[]; } = transformSpecialPowers(a, statistics);
-    
+
     return {
       id,
       name,
@@ -40,19 +43,20 @@ export class PokemonListService {
       weight,
       abilities,
       stats,
-      frontShiny: sprites.front_shiny,
+      frontShiny: sprites.other.dream_world.front_default,
+      index
     }
   }
-  
-  private get(id: number): Observable<DisplayPokemon> {
+
+  private get(id: number, index: number): Observable<DisplayPokemon> {
     return this.httpClient
       .get<Pokemon>(`https://pokeapi.co/api/v2/pokemon/${id}`)
       .pipe(
-        map((pokemon) => this.pokemonTransformer(pokemon)),
+        map((pokemon) => this.pokemonTransformer(pokemon, index)),
         retry(3),
-        catchError((err) => { 
+        catchError((err) => {
           console.error(err);
-          return EMPTY; 
+          return EMPTY;
         }),
       );
   }

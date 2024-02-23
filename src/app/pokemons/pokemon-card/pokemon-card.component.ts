@@ -1,15 +1,16 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { DisplayPokemon } from '../interfaces/pokemon.interface';
+import { NgOptimizedImage } from '@angular/common';
 
 @Component({
   selector: 'app-pokemon-card',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, NgOptimizedImage],
   template: `
     <div class="card">
       <div class="image">
-        <img [src]="pokemon.frontShiny" width="80" height="80" />
+        <img [ngSrc]="pokemon.frontShiny" width="80" height="80" priority placeholder/>
       </div>
       <div class="details">
         <label for="id">
@@ -34,14 +35,15 @@ import { DisplayPokemon } from '../interfaces/pokemon.interface';
       display: flex;
       padding: 0.75rem;
       margin-bottom: 0.25rem;
-
       height: 150px;
+      width: 240px;
     }
 
     .image {
       display: flex;
       justify-content: center;
       align-items: center;
+      background-color: lightgrey;
     }
 
     .details {

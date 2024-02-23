@@ -31,7 +31,7 @@ export class PokemonDetailsService {
     const { abilities, stats } = transformSpecialPowers(pokemon.abilities, pokemon.stats);
 
     return {
-      frontShiny: pokemon.sprites.front_shiny,
+      frontShiny: pokemon.sprites.other.dream_world.front_default,
       stats,
       abilities,
     }
@@ -40,7 +40,7 @@ export class PokemonDetailsService {
   private pokemonDetailsTransformer(pokemon: Pokemon | DisplayPokemon, species: PokemonSpecies): PokemonDetails {
     const { id, name, height, weight, stats: statistics, abilities: a } = pokemon;
     const details = this.getDetails(pokemon);
-    
+
     return {
       ...details,
       id,
@@ -54,11 +54,11 @@ export class PokemonDetailsService {
   }
 
   getPokemonDetails(id: number, displayPokemon: DisplayPokemon | undefined): Observable<PokemonDetails> {
-    const getPokemon$ = iif(() => !displayPokemon, 
-      this.httpClient.get<Pokemon>(`https://pokeapi.co/api/v2/pokemon/${id}`), 
+    const getPokemon$ = iif(() => !displayPokemon,
+      this.httpClient.get<Pokemon>(`https://pokeapi.co/api/v2/pokemon/${id}`),
       of(displayPokemon as DisplayPokemon));
-    
-    return getPokemon$.pipe(switchMap((pokemon) => 
+
+    return getPokemon$.pipe(switchMap((pokemon) =>
         this.httpClient.get<PokemonSpecies>(`https://pokeapi.co/api/v2/pokemon-species/${pokemon.id}`)
           .pipe(
             map((species) => this.pokemonDetailsTransformer(pokemon, species)),
