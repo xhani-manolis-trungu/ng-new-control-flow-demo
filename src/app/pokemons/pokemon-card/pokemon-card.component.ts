@@ -18,7 +18,7 @@ import { NgOptimizedImage } from '@angular/common';
         </label>
         <label for="name">
           <span>Name: </span>
-          <a [routerLink]="['pokemon', pokemon.id]" [state]="{ pokemon }"><span id="name" name="name">{{ pokemon.name }}</span></a>
+          <button class="text-dark" [routerLink]="['pokemon', pokemon.id]" [state]="{ pokemon }"><span id="name" name="name">{{ pokemon.name }}</span></button>
         </label>
         <label for="weight">
           <span>Weight: </span><span id="weight" name="weight">{{ pokemon.weight }}</span>
@@ -31,12 +31,13 @@ import { NgOptimizedImage } from '@angular/common';
   `,
   styles: [`
     .card {
-      border: 1px solid black;
+      border: 1px solid #514646;
+      border-radius: 20px;
+      background-color: #2f2b3a;
       display: flex;
       padding: 0.75rem;
-      margin-bottom: 0.25rem;
+      margin: 0 0.25rem 0.25rem 0;
       height: 150px;
-      width: 240px;
     }
 
     .image {
@@ -44,6 +45,7 @@ import { NgOptimizedImage } from '@angular/common';
       justify-content: center;
       align-items: center;
       background-color: lightgrey;
+      padding: 4px;
     }
 
     .details {
@@ -51,6 +53,11 @@ import { NgOptimizedImage } from '@angular/common';
       flex-direction: column;
       justify-content: center;
       padding-left: 1rem;
+    }
+
+    #id, #weight, #height {
+      color: #fff;
+      font-weight: 600;
     }
   `],
   changeDetection: ChangeDetectionStrategy.OnPush,

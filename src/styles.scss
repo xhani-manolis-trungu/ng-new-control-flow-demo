@@ -8,17 +8,34 @@
 body {
     min-height: 100%;
     height: 100vh;
+    background-color: #1a1625;
 }
 
-label > span:first-of-type {
-    color: #aaa;
-} 
-
-label {
+label, a, h2, p {
+    text-transform: capitalize;
+    font-weight: 700;
+    font-family: "Plus_Jakarta_Sans","Roboto",-apple-system,"Segoe UI",sans-serif;
+    color: #908d96;
     margin-bottom: 0.25rem;
+}
+
+button {
+  text-transform: capitalize;
+  margin: 4px;
+  background-color: #ba9ffb;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  border-radius: 50px;
+  padding: 4px;
+}
+
+.text-dark {
+  color: #000;
 }
 
 p.heading {
     margin-bottom: 0.25rem;
     text-decoration: underline;
+    color: #908d96;
 }

@@ -7,11 +7,11 @@ import { PokemonListService } from '../services/pokemon-list.service';
   standalone: true,
   imports: [RouterLink, RouterLinkActive],
   template: `
-    <div class="pagination-bar">
+    <div #pagination class="pagination-bar">
       <ul>
         @for (page of pages; track page) {
           <li>
-            <a [routerLink]="['../list']" [queryParams]="{ page: page + 1 }" (click)="currentPage.set(page)" 
+            <a [routerLink]="['../list']" [queryParams]="{ page: page + 1 }" (click)="currentPage.set(page)"
               routerLinkActive="active">Page {{ page + 1 }}</a>
           </li>
         }

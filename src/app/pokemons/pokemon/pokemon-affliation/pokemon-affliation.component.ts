@@ -27,6 +27,10 @@ import { PokemonAffiliation } from './types/affiliation.type';
   styles: [`
     p.team {
       margin-bottom: 1rem;
+      text-transform: capitalize;
+      font-weight: 700;
+      font-family: "Plus_Jakarta_Sans", "Roboto", -apple-system, "Segoe UI", sans-serif;
+      color: #908d96;
     }
   `],
   changeDetection: ChangeDetectionStrategy.OnPush,

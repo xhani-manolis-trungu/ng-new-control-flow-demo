@@ -8,11 +8,12 @@ import { PokemonAbilitiesComponent } from './pokemon-abilities/pokemon-abilities
 import { PokemonPhysicalComponent } from './pokemon-physical/pokemon-physical.component';
 import { PokemonStatisticsComponent } from './pokemon-statistics/pokemon-statistics.component';
 import { PokemonDetailsService } from './services/pokemon-details.service';
+import { PlaceholderComponent } from '../placeholder/placeholder.component';
 
 @Component({
   selector: 'app-pokemon',
   standalone: true,
-  imports: [AsyncPipe, PokemonStatisticsComponent, PokemonAbilitiesComponent, PokemonPhysicalComponent],
+  imports: [AsyncPipe, PokemonStatisticsComponent, PokemonAbilitiesComponent, PokemonPhysicalComponent, PlaceholderComponent],
   template: `
     <div class="content">
       @if (pokemonDetails$ | async; as pokemonDetails) {
@@ -20,10 +21,8 @@ import { PokemonDetailsService } from './services/pokemon-details.service';
           <app-pokemon-physical [pokemonDetails]="pokemonDetails" />
           <app-pokemon-statistics [statistics]="pokemonDetails.stats" />
           <app-pokemon-abilities [abilities]="pokemonDetails.abilities" />
-        } @loading (minimum 200ms) {
+        } @loading (after 150ms; minimum 100ms) {
           <p>Loading....</p>
-        } @placeholder (minimum 500ms) {
-          <div style="height: 526.4px; background-color: gray;">Placeholder of Pokemon</div>
         } @error {
           <p>Failed to load dependencies</p>
         }

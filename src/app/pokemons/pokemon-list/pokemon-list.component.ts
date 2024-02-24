@@ -1,4 +1,21 @@
-import { ChangeDetectionStrategy, Component, ElementRef, EnvironmentInjector, Input, OnChanges, Signal, SimpleChange, SimpleChanges, ViewChild, computed, effect, inject, numberAttribute, runInInjectionContext } from '@angular/core';
+import { PlaceholderComponent } from './../placeholder/placeholder.component';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  EnvironmentInjector,
+  Input,
+  OnChanges,
+  Signal,
+  SimpleChange,
+  SimpleChanges,
+  ViewChild,
+  computed,
+  effect,
+  inject,
+  numberAttribute,
+  runInInjectionContext,
+} from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { Observable, distinctUntilChanged, map, switchMap, tap } from 'rxjs';
 import { DisplayPokemon } from '../interfaces/pokemon.interface';
@@ -10,86 +27,60 @@ import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-pokemon-list',
   standalone: true,
-  imports: [PokemonCardComponent, PokemonPaginationComponent],
+  imports: [
+    PokemonCardComponent,
+    PokemonPaginationComponent,
+    PlaceholderComponent,
+  ],
   template: `
     <div class="container">
-      <h2>Pokemon List</h2>
-      <app-pokemon-pagination />
-      <div #cardLayout class="card-layout">
+      <header style="display: flex; flex-direction: column; text-align: center">
+        <h2>Pokemon , I've gotta catch em all</h2>
+        <span
+          style="display:flex; flex-direction: row; justify-content: center; align-items: center"
+        >
+          <span><img src="assets/pokeball.png" alt="pokeball" /></span>
+        </span>
+      </header>
+      @defer {
+        <app-pokemon-pagination />
+      }
+      <div #cardLayout class="cards-container">
         @defer (prefetch on immediate) {
           @for (pokemon of pokemons(); track $index) {
             <app-pokemon-card [pokemon]="pokemon" />
           }
-        } @loading (minimum 500ms) {
-        <p>Loading....</p>
-        } @placeholder (minimum 300ms) {
-        <p>Placeholder of Pokemon List</p>
+        } @placeholder (minimum 800ms) {
+          @for (i of [1,2,3,4,5,6,7,8,9,10]; track $index) {
+            @defer (on immediate) {
+              <app-pokemon-placeholder />
+            }
+          }
+        } @loading (after 150ms; minimum 100ms) {
+          <p>Loading....</p>
         } @error {
-        <p>Failed to load dependencies</p>
+          <p>Failed to load dependencies</p>
         }
       </div>
-
     </div>
   `,
   styles: [
     `
+      .cards-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(290px, 2fr)); /* Adjust the minmax values as needed */
+        gap: 20px;
+        padding: 20px;
+      }
+
       h2 {
         text-decoration: underline;
         font-style: italic;
-        margin-bottom: 2rem;
       }
 
       div.container {
         padding: 0.75rem;
         margin-bottom: 2rem;
-      }
-
-      .card-layout {
-        display: flex;
-        flex-wrap: wrap;
-      }
-
-      .card-layout > * {
-        --num-cards: 7;
-        flex-basis: calc((100% - 2 * 0.75rem) / var(--num-cards));
-        flex-shrink: 1;
-        flex-grow: 0;
-      }
-
-      @media (max-width: 1440px) {
-        .card-layout > * {
-          --num-cards: 6;
-        }
-      }
-
-      @media (max-width: 1200px) {
-        .card-layout > * {
-          --num-cards: 5;
-        }
-      }
-
-      @media (max-width: 992px) {
-        .card-layout > * {
-          --num-cards: 4;
-        }
-      }
-
-      @media (max-width: 768px) {
-        .card-layout > * {
-          --num-cards: 3;
-        }
-      }
-
-      @media (max-width: 576px) {
-        .card-layout > * {
-          --num-cards: 2;
-        }
-      }
-
-      @media (max-width: 360px) {
-        .card-layout > * {
-          --num-cards: 1;
-        }
       }
     `,
   ],
@@ -117,29 +108,21 @@ export class PokemonListComponent implements OnChanges {
   constructor(private activatedRoute: ActivatedRoute) {}
 
   ngOnChanges(change: SimpleChanges) {
-    console.log(change);
     runInInjectionContext(this.environmentInjector, () => {
       if (change['_page'].currentValue > 1) {
-        this.pokemons = toSignal(
-          toObservable(this.currentPage).pipe(
-            distinctUntilChanged((prev, curr) => prev !== curr),
-            switchMap(() => this.pokemonLisService.getPokemons())
-          ),
-          { initialValue: [] as DisplayPokemon[] }
-        );
+        this.pokemons = this.getPokemonsOnPageChange();
       } else {
         this.pokemons = toSignal(this.getPokemonResolvedData(), {
           initialValue: [] as DisplayPokemon[],
         });
       }
-
     });
   }
 
-
   getPokemonsOnPageChange() {
-    this.pokemons = toSignal(
+    return toSignal(
       toObservable(this.currentPage).pipe(
+        distinctUntilChanged((prev, curr) => prev !== curr),
         switchMap(() => this.pokemonLisService.getPokemons())
       ),
       { initialValue: [] as DisplayPokemon[] }
