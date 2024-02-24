@@ -30,18 +30,20 @@ import { NgOptimizedImage } from '@angular/common';
     </div>
   `,
   styles: [`
+    .card, .image, .details {
+      border-radius: 20px;
+      display: flex;
+    }
+
     .card {
       border: 1px solid #514646;
-      border-radius: 20px;
       background-color: #2f2b3a;
-      display: flex;
       padding: 0.75rem;
       margin: 0 0.25rem 0.25rem 0;
       height: 150px;
     }
 
     .image {
-      display: flex;
       justify-content: center;
       align-items: center;
       background-color: lightgrey;
@@ -49,7 +51,6 @@ import { NgOptimizedImage } from '@angular/common';
     }
 
     .details {
-      display: flex;
       flex-direction: column;
       justify-content: center;
       padding-left: 1rem;
