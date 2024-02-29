@@ -1,11 +1,18 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { EMPTY, Observable, catchError, iif, map, of, retry, switchMap } from 'rxjs';
+import { Observable } from 'rxjs/internal/Observable';
+import { EMPTY } from 'rxjs/internal/observable/empty';
+import { iif } from 'rxjs/internal/observable/iif';
+import { of } from 'rxjs/internal/observable/of';
+import { catchError } from 'rxjs/internal/operators/catchError';
+import { map } from 'rxjs/internal/operators/map';
+import { retry } from 'rxjs/internal/operators/retry';
+import { switchMap } from 'rxjs/internal/operators/switchMap';
 import { Ability } from '../../interfaces/pokemon-abilities.interface';
 import { Statistics } from '../../interfaces/pokemon-statistics.interface';
 import { DisplayPokemon, Pokemon } from '../../interfaces/pokemon.interface';
-import { PokemonDetails, PokemonSpecies } from '../interfaces/pokemon-details.interface';
 import { transformSpecialPowers } from '../../utilities/transform-special-powers.util';
+import { PokemonDetails, PokemonSpecies } from '../interfaces/pokemon-details.interface';
 
 function isDisplayPokemon(pokemon: Pokemon | DisplayPokemon): pokemon is DisplayPokemon {
   return typeof pokemon !== 'undefined' &&  'frontShiny' in pokemon;

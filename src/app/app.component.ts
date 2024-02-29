@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { setTitle } from './pokemons/utilities/title';
-import { PlaceholderComponent } from './pokemons/placeholder/placeholder.component';
 import { PokemonPaginationComponent } from './pokemons/pokemon-pagination/pokemon-pagination.component';
+import { setTitle } from './pokemons/utilities/title';
 
 @Component({
   selector: 'app-root',

@@ -13,8 +13,8 @@ import {
   runInInjectionContext
 } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute } from '@angular/router';
-import { distinctUntilChanged, switchMap } from 'rxjs';
+import { distinctUntilChanged } from 'rxjs/internal/operators/distinctUntilChanged';
+import { switchMap } from 'rxjs/internal/operators/switchMap';
 import { DisplayPokemon } from '../interfaces/pokemon.interface';
 import { PokemonCardComponent } from '../pokemon-card/pokemon-card.component';
 import { PokemonPaginationComponent } from '../pokemon-pagination/pokemon-pagination.component';
@@ -37,13 +37,13 @@ import { PlaceholderComponent } from './../placeholder/placeholder.component';
           @for (pokemon of pokemons(); track pokemon.index) {
             <app-pokemon-card [pokemon]="pokemon" />
           }
-        } @placeholder (minimum 6s) {
+        } @placeholder (minimum 3s) {
           @for (i of [1,2,3,4,5,6,7,8,9,10]; track $index;) {
             @defer (on immediate) {
               <app-pokemon-placeholder />
             }
           }
-        } @loading (after 100ms; minimum 2s) {
+        } @loading (after 100ms; minimum 10s) {
             <app-pokemon-placeholder />
         }
         <!--

@@ -1,11 +1,16 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, WritableSignal, inject, signal } from '@angular/core';
-import { EMPTY, Observable, catchError, forkJoin, map, of, retry } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+import { Observable } from 'rxjs/internal/Observable';
+import { EMPTY } from 'rxjs/internal/observable/empty';
+import { forkJoin } from 'rxjs/internal/observable/forkJoin';
+import { catchError } from 'rxjs/internal/operators/catchError';
+import { map } from 'rxjs/internal/operators/map';
+import { retry } from 'rxjs/internal/operators/retry';
 import { Ability } from '../interfaces/pokemon-abilities.interface';
 import { Statistics } from '../interfaces/pokemon-statistics.interface';
 import { DisplayPokemon, Pokemon } from '../interfaces/pokemon.interface';
 import { transformSpecialPowers } from '../utilities/transform-special-powers.util';
-import { ActivatedRoute } from '@angular/router';
 
 const PAGE_SIZE = 10;
 
