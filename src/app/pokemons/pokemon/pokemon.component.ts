@@ -21,7 +21,7 @@ import { PlaceholderComponent } from '../placeholder/placeholder.component';
           <app-pokemon-physical [pokemonDetails]="pokemonDetails" />
           <app-pokemon-statistics [statistics]="pokemonDetails.stats" />
           <app-pokemon-abilities [abilities]="pokemonDetails.abilities" />
-        } @loading (after 150ms; minimum 100ms) {
+        } @loading (after 150ms; minimum 3s) {
           <p>Loading....</p>
         } @error {
           <p>Failed to load dependencies</p>
