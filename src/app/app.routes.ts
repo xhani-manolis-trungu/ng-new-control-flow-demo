@@ -1,13 +1,11 @@
-import { inject } from '@angular/core';
 import { Routes } from '@angular/router';
-import { PokemonResolver } from './pokemons/services/pokemon-resolver.service';
 
 export const routes: Routes = [
     {
         path: 'list',
         loadComponent: () => import('./pokemons/pokemon-list/pokemon-list.component')
             .then((m) => m.PokemonListComponent),
-        resolve: {'pokemon': PokemonResolver},
+        // component: PokemonListComponent,
         title: 'Pokemon List'
     },
     {

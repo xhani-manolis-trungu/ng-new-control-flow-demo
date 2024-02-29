@@ -18,8 +18,9 @@ import { Component } from '@angular/core';
         display: flex;
         padding: 0.75rem;
         margin: 0 0.25rem 0.25rem 0;
-        height: 150px;
-        border-radius: 20px
+        height: 160px;
+        border-radius: 20px;
+        width: auto;
       }
 
       .load-wraper {
@@ -70,12 +71,6 @@ import { Component } from '@angular/core';
         }
         100% {
           left: 100%;
-        }
-      }
-
-      @media only screen and (min-width: 600px) {
-        .card, .placeholder-wrapper {
-          width: 360px;
         }
       }
     `,

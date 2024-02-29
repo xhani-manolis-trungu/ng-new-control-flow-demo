@@ -1,10 +1,11 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, inject, signal } from '@angular/core';
-import { EMPTY, Observable, catchError, forkJoin, map, retry } from 'rxjs';
+import { Injectable, WritableSignal, inject, signal } from '@angular/core';
+import { EMPTY, Observable, catchError, forkJoin, map, of, retry } from 'rxjs';
 import { Ability } from '../interfaces/pokemon-abilities.interface';
 import { Statistics } from '../interfaces/pokemon-statistics.interface';
 import { DisplayPokemon, Pokemon } from '../interfaces/pokemon.interface';
 import { transformSpecialPowers } from '../utilities/transform-special-powers.util';
+import { ActivatedRoute } from '@angular/router';
 
 const PAGE_SIZE = 10;
 
@@ -13,21 +14,23 @@ const PAGE_SIZE = 10;
 })
 export class PokemonListService {
   private readonly httpClient = inject(HttpClient);
+  private readonly activatedRoute = inject(ActivatedRoute);
 
-  currentPage = signal(0);
+  currentPage: WritableSignal<number> = signal(0);
 
   getPage(pokemonId: number): number {
     return Math.ceil(pokemonId / PAGE_SIZE);
   }
 
   getPokemons(): Observable<DisplayPokemon[]> {
+    const currentPage = parseInt(sessionStorage.getItem('currentPage') as unknown as string);
+    this.currentPage.set(currentPage);
     const pageSize = PAGE_SIZE;
     const pokemonIds = [...Array(pageSize).keys()]
       .map((n) => {
         return pageSize * this.currentPage() + (n + 1)
       });
 
-      console.log(pokemonIds)
     return forkJoin(pokemonIds.map((id, index) => this.get(id, index)));
   }
 

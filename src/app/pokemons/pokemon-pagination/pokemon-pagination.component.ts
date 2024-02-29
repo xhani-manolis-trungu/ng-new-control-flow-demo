@@ -11,7 +11,7 @@ import { PokemonListService } from '../services/pokemon-list.service';
       <ul>
         @for (page of pages; track page) {
           <li>
-            <a [routerLink]="['../list']" [queryParams]="{ page: page + 1 }" (click)="currentPage.set(page)"
+            <a [routerLink]="['../list']" [queryParams]="{ page: page + 1 }" (click)="setCurrentPage(page)"
               routerLinkActive="active">Page {{ page + 1 }}</a>
           </li>
         }
@@ -43,4 +43,8 @@ import { PokemonListService } from '../services/pokemon-list.service';
 export class PokemonPaginationComponent {
   pages = [...Array(10).keys()];
   currentPage = inject(PokemonListService).currentPage;
+
+  setCurrentPage(page: number) {
+    sessionStorage.setItem('currentPage', JSON.stringify(page));
+  }
 }

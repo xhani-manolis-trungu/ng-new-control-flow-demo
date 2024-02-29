@@ -40,7 +40,7 @@ import { NgOptimizedImage } from '@angular/common';
       background-color: #2f2b3a;
       padding: 0.75rem;
       margin: 0 0.25rem 0.25rem 0;
-      height: 150px;
+      max-height: 160px;
     }
 
     .image {

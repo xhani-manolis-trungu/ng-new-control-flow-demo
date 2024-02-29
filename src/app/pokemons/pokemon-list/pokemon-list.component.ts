@@ -1,4 +1,4 @@
-import { PlaceholderComponent } from './../placeholder/placeholder.component';
+import { NgOptimizedImage } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -7,22 +7,19 @@ import {
   Input,
   OnChanges,
   Signal,
-  SimpleChange,
-  SimpleChanges,
   ViewChild,
-  computed,
-  effect,
   inject,
   numberAttribute,
-  runInInjectionContext,
+  runInInjectionContext
 } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { Observable, distinctUntilChanged, map, switchMap, tap } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+import { distinctUntilChanged, switchMap } from 'rxjs';
 import { DisplayPokemon } from '../interfaces/pokemon.interface';
 import { PokemonCardComponent } from '../pokemon-card/pokemon-card.component';
 import { PokemonPaginationComponent } from '../pokemon-pagination/pokemon-pagination.component';
 import { PokemonListService } from '../services/pokemon-list.service';
-import { ActivatedRoute } from '@angular/router';
+import { PlaceholderComponent } from './../placeholder/placeholder.component';
 
 @Component({
   selector: 'app-pokemon-list',
@@ -31,36 +28,40 @@ import { ActivatedRoute } from '@angular/router';
     PokemonCardComponent,
     PokemonPaginationComponent,
     PlaceholderComponent,
+    NgOptimizedImage,
   ],
   template: `
     <div class="container">
-      <header style="display: flex; flex-direction: column; text-align: center">
-        <h2>Pokemon , I've gotta catch em all</h2>
-        <span
-          style="display:flex; flex-direction: row; justify-content: center; align-items: center"
-        >
-          <span><img src="assets/pokeball.png" alt="pokeball" /></span>
-        </span>
-      </header>
-      @defer {
-        <app-pokemon-pagination />
-      }
-      <div #cardLayout class="cards-container">
-        @defer (prefetch on immediate) {
-          @for (pokemon of pokemons(); track $index) {
+      <div class="cards-container">
+        @defer {
+          @for (pokemon of pokemons(); track pokemon.index) {
             <app-pokemon-card [pokemon]="pokemon" />
           }
-        } @placeholder (minimum 800ms) {
-          @for (i of [1,2,3,4,5,6,7,8,9,10]; track $index) {
+        } @placeholder (minimum 6s) {
+          @for (i of [1,2,3,4,5,6,7,8,9,10]; track $index;) {
             @defer (on immediate) {
               <app-pokemon-placeholder />
             }
           }
-        } @loading (after 150ms; minimum 100ms) {
+        } @loading (after 100ms; minimum 2s) {
+            <app-pokemon-placeholder />
+        }
+        <!--
+          @loading (after 150ms; minimum 800ms) {
+            @for (i of [1,2,3,4,5,6,7,8,9,10]; track $index) {
+              <app-pokemon-placeholder />
+            }
+          } @error {
+            <p>Failed to load dependencies</p>
+          }
+         -->
+        <!--
+          @loading (after 150ms; minimum 100ms) {
           <p>Loading....</p>
         } @error {
           <p>Failed to load dependencies</p>
         }
+        -->
       </div>
     </div>
   `,
@@ -68,7 +69,7 @@ import { ActivatedRoute } from '@angular/router';
     `
       .cards-container {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(290px, 2fr)); /* Adjust the minmax values as needed */
+        grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); /* Adjust the minmax values as needed */
         gap: 20px;
         padding: 20px;
       }
@@ -105,17 +106,11 @@ export class PokemonListComponent implements OnChanges {
   pokemonLisService = inject(PokemonListService);
   currentPage = this.pokemonLisService.currentPage;
 
-  constructor(private activatedRoute: ActivatedRoute) {}
+  constructor() {}
 
-  ngOnChanges(change: SimpleChanges) {
+  ngOnChanges() {
     runInInjectionContext(this.environmentInjector, () => {
-      if (change['_page'].currentValue > 1) {
-        this.pokemons = this.getPokemonsOnPageChange();
-      } else {
-        this.pokemons = toSignal(this.getPokemonResolvedData(), {
-          initialValue: [] as DisplayPokemon[],
-        });
-      }
+      this.pokemons = this.getPokemonsOnPageChange();
     });
   }
 
@@ -126,13 +121,6 @@ export class PokemonListComponent implements OnChanges {
         switchMap(() => this.pokemonLisService.getPokemons())
       ),
       { initialValue: [] as DisplayPokemon[] }
-    );
-  }
-
-  getPokemonResolvedData(): Observable<DisplayPokemon[]> {
-    return this.activatedRoute.data.pipe(
-      switchMap(async (data) => data),
-      map((data) => data['pokemon'])
     );
   }
 }

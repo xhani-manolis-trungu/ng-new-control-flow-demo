@@ -75,6 +75,7 @@ export class PokemonComponent implements OnInit {
   }
 
   backToPage() {
-    this.router.navigate(['/list'], { queryParams: { page: this.page }});
+    const currentPage = parseInt(sessionStorage.getItem('currentPage') as unknown as string);
+    this.router.navigate(['/list'], { queryParams: { page: currentPage + 1 }});
   }
 }
